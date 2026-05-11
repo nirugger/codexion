@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:25:00 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/11 13:39:59 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/11 18:09:40 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 long	get_time(void)
 {
 	long			time;
-	struct timeval	tv;
+	struct timeval	tvanni;
 
-	gettimeofday(&tv, NULL);
-	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+	gettimeofday(&tvanni, NULL);
+	return ((tvanni.tv_sec * 1000) + (tvanni.tv_usec / 1000));
 }
 
 int	main(int argc, char **argv)

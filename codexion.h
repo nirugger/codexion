@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:28:33 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/11 13:42:07 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/11 18:26:29 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,18 @@ typedef struct s_dongle
 	t_args			*args;
 	pthread_mutex_t	d_mutex;
 }	t_dongle;
+
+//	pthread_mutex_init()
+//	pthread_mutex_lock()
+//		sezione critica
+//	pthread_cond_broadcast()
+//	pthread_mutex_unlock()
+
+// while (pthread_cond_wait(&cond))
+// {
+// 	continue;
+// };
+// pthread_mutex_lock;
 
 struct s_coder
 {
