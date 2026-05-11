@@ -6,16 +6,16 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:32:57 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/11 11:49:45 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/11 13:46:07 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "codexion.h"
+#include "codexion.h"
 
-int	is_valid_integer(char *c)
+static int	is_valid_integer(char *c)
 {
 	int	j;
-	int len;
+	int	len;
 
 	j = 0;
 	len = strlen(c);
@@ -44,7 +44,6 @@ static void	fill_args(char **argv, t_args *args)
 	args->scheduler = argv[8];
 }
 
-
 int	parse_args(int argc, char **argv, t_args *args)
 {
 	int	i;
@@ -60,7 +59,6 @@ int	parse_args(int argc, char **argv, t_args *args)
 	}
 	if (strcmp(argv[i], "fifo") && strcmp(argv[i], "edf"))
 		return (BASE_FAIL);
-
 	fill_args(argv, args);
 	return (SUCCESS);
 }

@@ -6,14 +6,14 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:36:29 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/11 11:19:36 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/11 13:40:54 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "codexion.h"
+#include "codexion.h"
 
-int	error()
+int	error(void)
 {
 	printf("[ERROR]");
-	return(BASE_FAIL);
+	return (BASE_FAIL);
 }
