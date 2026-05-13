@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/12 22:56:18 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/13 19:27:22 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/13 19:44:06 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,16 +86,17 @@ void	*coder_routine(void  *coder)
 
 		
 		log_msg(c->log_mutex, get_time() - c->start, c->coder_id, c->msg->compile);
-		usleep(c->args->time_to_compile);
+		usleep(c->args->time_to_compile * 1000);
 		// pthread_mutex_unlock(&c->dongle_min->dongle_mutex);
 		// ho finito di compilare, lo rilascio
 		release_dongle(c->dongle_min);
+		release_dongle(c->dongle_max);
 
 		log_msg(c->log_mutex, get_time() - c->start, c->coder_id, c->msg->debug);
-		usleep(c->args->time_to_debug);
+		usleep(c->args->time_to_debug * 1000);
 
 		log_msg(c->log_mutex, get_time() - c->start, c->coder_id, c->msg->refactor);
-		usleep(c->args->time_to_refactor);
+		usleep(c->args->time_to_refactor * 1000);
 		c->total_compile++;
 	}
 	log_msg(c->log_mutex, get_time() - c->sim->start, c->coder_id, "SONO USCITO\n");
