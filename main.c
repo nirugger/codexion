@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:25:00 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/13 11:27:31 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/13 19:19:08 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,37 +24,85 @@ long	get_time(void)
 int	main(int argc, char **argv)
 {
 	t_args			args;
-	t_coder			coders[2];
-	pthread_t		coder_threads[2];
+	t_coder			coders[3];
+	t_dongle		dongles[3];
+	t_msg			msg;
+	pthread_t		coder_threads[3];
 	pthread_mutex_t	log_mutex;
 
 	long			start;
 	int				i;
 
-	// if (validate_args(argc, argv, &args) != OK)
-	// 	return (error());
-	// printf("PARSER PASSATO");
+	t_sim			simulator;
 
+	if (validate_args(argc, argv, &args) != OK)
+		return (error());
+	printf("PARSER PASSATO\n");
+	printf("\n%s\n", args.scheduler);
 	start = get_time();
 	i = 0;
 	pthread_mutex_init(&log_mutex, NULL);
 
+	// args.number_of_compiles_required = 100;
+	// args.dongle_cooldown = 500;
+	// args.time_to_refactor = 250;
+	// args.time_to_debug = 250;
+	// args.time_to_compile = 250;
 
-	while(i < 2)
+	init_msg_struct(&msg);
+
+	simulator.args = &args;
+	simulator.coders = coders;
+	simulator.dongles = dongles;
+	simulator.start = start;
+	simulator.end = 0;
+	simulator.burnout = 0;
+
+	while(i < 3)
+	{
+		dongles[i].dongle_id = i + 1;
+		dongles[i].args = &args;
+		dongles[i].is_free = TRUE;
+		dongles[i].release_time = get_time() - args.dongle_cooldown;
+		pthread_cond_init(&dongles[i].dongle_cond, NULL);
+		pthread_mutex_init(&dongles[i].dongle_mutex, NULL);
+		i++;
+	}
+	
+	i = 0;
+	while(i < 3)
 	{
 		coders[i].coder_id = i + 1;
 		coders[i].log_mutex = &log_mutex;
 		coders[i].start = start;
+		coders[i].total_compile = 0;
+		coders[i].args = &args;
+		coders[i].msg = &msg;
+		coders[i].sim = &simulator;
+		
 		i++;
 	}
+
+	coders[0].dongle_min = &dongles[0];
+	coders[0].dongle_max = &dongles[1];
+	coders[1].dongle_min = &dongles[1];
+	coders[1].dongle_max = &dongles[2];
+	coders[2].dongle_min = &dongles[0];
+	coders[2].dongle_max = &dongles[2];
+
+	// pthread_t sim_thread;
+	// pthread_create(&sim_thread, NULL, sim_routine, &simulator);
+
 	i = 0;
-	while(i < 2)
+	while(i < 3)
 	{
 		pthread_create(&coder_threads[i], NULL, coder_routine, &coders[i]);
 		i++;
 	}
+	
+	// pthread_join(sim_thread, NULL);
 	i = 0;
-	while(i < 2)
+	while(i < 3)
 	{
 		pthread_join(coder_threads[i], NULL);
 		i++;
