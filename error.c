@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:36:29 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/11 13:40:54 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/12 23:35:58 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,5 +15,5 @@
 int	error(void)
 {
 	printf("[ERROR]");
-	return (BASE_FAIL);
+	return (KO);
 }

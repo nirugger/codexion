@@ -6,32 +6,38 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:32:57 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/11 13:46:07 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/12 23:57:29 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-static int	is_valid_integer(char *c)
+/// @brief Ask if arg is a valid positive integer.
+/// @param arg : the string to be parsed.
+/// @return 'TRUE' if it is a valid positive integer, 'FALSE' otherwise.
+static int	is_valid_integer(char *arg)
 {
-	int	j;
+	int	i;
 	int	len;
 
-	j = 0;
-	len = strlen(c);
+	i = 0;
+	len = strlen(arg);
 	if (len > 11)
-		return (BASE_FAIL);
-	if (len == 11 && strcmp(c, "2147483647") > 0)
-		return (BASE_FAIL);
-	while (j < len)
+		return (FALSE);
+	if (len == 11 && strcmp(arg, "2147483647") > 0)
+		return (FALSE);
+	while (i < len)
 	{
-		if (c[j] < '0' || c[j] > '9')
+		if (arg[i] < '0' || arg[i] > '9')
 			return (FALSE);
-		j++;
+		i++;
 	}
 	return (TRUE);
 }
 
+/// @brief Fill 't_args' struct with validated arguments. 
+/// @param argv : arguments.
+/// @param args : 't_args" struct.
 static void	fill_args(char **argv, t_args *args)
 {
 	args->number_of_coders = atoi(argv[1]);
@@ -44,21 +50,26 @@ static void	fill_args(char **argv, t_args *args)
 	args->scheduler = argv[8];
 }
 
-int	parse_args(int argc, char **argv, t_args *args)
+/// @brief Validate the arguments and fill t_args struct.
+/// @param argc : number of arguments.
+/// @param argv : arguments.
+/// @param args : 't_args' struct.
+/// @return : 'KO' if arguments aren't valid, 'OK' otherwise.
+int	validate_args(int argc, char **argv, t_args *args)
 {
 	int	i;
 
 	if (argc != 9)
-		return (BASE_FAIL);
+		return (KO);
 	i = 1;
 	while (i < argc - 1)
 	{
 		if (!is_valid_integer(argv[i]))
-			return (BASE_FAIL);
+			return (KO);
 		i++;
 	}
 	if (strcmp(argv[i], "fifo") && strcmp(argv[i], "edf"))
-		return (BASE_FAIL);
+		return (KO);
 	fill_args(argv, args);
-	return (SUCCESS);
+	return (OK);
 }
