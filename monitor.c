@@ -1,34 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   monitor.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/11 10:25:00 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/14 02:39:53 by nirugger         ###   ########.fr       */
+/*   Created: 2026/05/13 22:19:48 by nirugger          #+#    #+#             */
+/*   Updated: 2026/05/14 01:29:24 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-
-int	main(int argc, char **argv)
+void	monitor_routine(void *sim)
 {
-	t_args			args;
-	t_sim			sim;
-	int				i;
+	t_sim	*s = (t_sim *)sim;
+	int		i;
 
-	if (validate_args(argc, argv, &args) != OK)
-		return (error());
-	if (init_simulation(&args, &sim) != OK)
-		return (error());
-
-	i = 0;
-	while(++i < args.number_of_coders)
-		pthread_create(&sim.coders[i].code, NULL, coder_routine, &sim.coders[i]);
-	
-	// pthread_join(sim_thread, NULL);
-	while(--i > 0)
-		pthread_join(sim.coders[i].code, NULL);
+	while (s->done < s->args->number_of_coders)
+	{
+		i = 0;
+		while (i < s->args->number_of_coders)
+		{
+			
+		}
+	}
 }

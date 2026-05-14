@@ -1,34 +1,14 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   coder_routine.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/11 10:25:00 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/14 02:39:53 by nirugger         ###   ########.fr       */
+/*   Created: 2026/05/14 00:32:10 by nirugger          #+#    #+#             */
+/*   Updated: 2026/05/14 00:32:16 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-
-int	main(int argc, char **argv)
-{
-	t_args			args;
-	t_sim			sim;
-	int				i;
-
-	if (validate_args(argc, argv, &args) != OK)
-		return (error());
-	if (init_simulation(&args, &sim) != OK)
-		return (error());
-
-	i = 0;
-	while(++i < args.number_of_coders)
-		pthread_create(&sim.coders[i].code, NULL, coder_routine, &sim.coders[i]);
-	
-	// pthread_join(sim_thread, NULL);
-	while(--i > 0)
-		pthread_join(sim.coders[i].code, NULL);
-}

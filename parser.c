@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:32:57 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/12 23:57:29 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/13 23:13:57 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,11 @@ static void	fill_args(char **argv, t_args *args)
 	args->number_of_compiles_required = atoi(argv[6]);
 	args->dongle_cooldown = atoi(argv[7]);
 	args->scheduler = argv[8];
+	args->msg.dong = "has taken a dongle";
+	args->msg.burn = "burned out";
+	args->msg.comp = "is compiling";
+	args->msg.dbug = "is debugging";
+	args->msg.rfac = "is refactoring";
 }
 
 /// @brief Validate the arguments and fill t_args struct.

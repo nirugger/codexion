@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:28:33 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/13 19:16:12 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/14 03:08:32 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,20 @@
 # define OK 0
 # define KO 1
 
+typedef struct s_msg	t_msg;
 typedef struct s_args	t_args;
 typedef struct s_coder	t_coder;
 typedef struct s_dongle	t_dongle;
 typedef struct s_sim	t_sim;
-typedef struct s_msg	t_msg;
+
+struct s_msg
+{
+	char	*dong;
+	char	*comp;
+	char	*dbug;
+	char	*rfac;
+	char	*burn;
+};
 
 struct s_args
 {
@@ -42,6 +51,7 @@ struct s_args
 	int		number_of_compiles_required;
 	long	dongle_cooldown;
 	char	*scheduler;
+	t_msg	msg;
 };
 
 struct s_dongle
@@ -62,43 +72,44 @@ struct s_coder
 	long			start_compiling;
 	t_args			*args;
 	t_sim			*sim;
-	t_msg			*msg;
 	t_dongle		*dongle_min;
 	t_dongle		*dongle_max;
-	pthread_mutex_t	*coder_mutex;
+	pthread_t		code;
+	pthread_mutex_t	*burn_mutex;
 	pthread_mutex_t *log_mutex;
-};
-
-struct s_msg
-{
-	char	*dongle;
-	char	*compile;
-	char	*debug;
-	char	*refactor;
-	char	*burnout;
 };
 
 struct s_sim
 {
-	t_args			*args;
-	t_dongle		*dongles;
-	t_coder			*coders;
+	int				done;
 	int				burnout;
 	long			start;
-	int				end;
-	pthread_mutex_t *coder_mutex;
+	t_args			*args;
+	t_msg			*msg;
+	t_dongle		*dongles;
+	t_coder			*coders;
+	// pthread_t		*c_threads;
+	pthread_t		*monitoring;
+	// pthread_mutex_t *coder_mutex;
+	pthread_mutex_t	burn_mutex;
+	pthread_mutex_t	log_mutex;
 };
 
 int		validate_args(int argc, char **argv, t_args *args);
 void	*coder_routine(void  *c);
 int		error(void);
 long	get_time(void);
-void	take_dongle(t_dongle *dongle);
+void	take_dongle(t_dongle *d, t_coder *c);
 void	release_dongle(t_dongle *dongle);
 int		check_burnout(t_coder *coder);
-void	*sim_routine(void *sim);
-void	init_msg_struct(t_msg *msgs);
+// void	*sim_routine(void *sim);
 int		in_cooldown(t_dongle *dongle);
+void	log_msg(pthread_mutex_t *log_mutex, long t, int id, char *msg);
+void	assign_dongles(t_sim *sim);
+int		init_simulation(t_args *args, t_sim *sim);
+int		init_dongles(t_sim *sim);
+void	init_coders(t_sim *sim);
+int		cleaup_and_return(t_sim *sim, int i);
 
 #endif
 
