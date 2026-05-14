@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 19:08:35 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/14 00:09:39 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/14 19:23:29 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,31 @@ long	get_time(void)
 
 	gettimeofday(&tvanni, NULL);
 	return ((tvanni.tv_sec * 1000) + (tvanni.tv_usec / 1000));
+}
+
+int	cleaup_and_return(t_sim *sim, int i, int c_mutex_flag)
+{
+	int	j;
+
+	j = i;
+	if (c_mutex_flag)
+	{
+		j = sim->args->number_of_coders;
+		while (i > 0)
+		{
+			i--;
+			pthread_mutex_destroy(&sim->coders[i].c_mutex);
+		}
+	}
+	while (j > 0)
+	{
+		j--;
+		pthread_cond_destroy(&sim->dongles[j].dongle_cond);
+		pthread_mutex_destroy(&sim->dongles[j].dongle_mutex);
+	}
+	free(sim->coders);
+	free(sim->dongles);
+	return (KO);
 }
 
 // void	assign_mutex(t_sim *sim)

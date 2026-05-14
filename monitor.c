@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 22:19:48 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/14 15:53:04 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/14 19:03:18 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ int	has_burned_out(t_sim *sim, int i)
 	{
 		pthread_mutex_lock(&sim->burn_mutex);
 		sim->burnout = 1;
-
-		printf("%ld\n", get_time() - sim->coders[i].burning);
 		pthread_mutex_unlock(&sim->burn_mutex);
 		pthread_mutex_unlock(&sim->coders[i].c_mutex);
 		return (TRUE);
@@ -58,18 +56,22 @@ void	*monitor_routine(void *sim)
 {
 	t_sim	*s;
 	int		i;
+	int		finished;
 	int		exit;
 
 	s = (t_sim *)sim;
+	finished = 0;
 	exit = 0;
-	while (1)
+	while (finished < s->args->number_of_coders)
 	{
 		i = 0;
+		finished = 0;
 		while (i < s->args->number_of_coders)
 		{
 			if (has_finished(&s->coders[i]))
 			{
 				i++;
+				finished++;
 				continue ;
 			}
 			exit = has_burned_out(s, i);
@@ -80,6 +82,6 @@ void	*monitor_routine(void *sim)
 			}
 			i++;
 		}
-		// printf("SONO IN UN LOOP\n");
+		usleep(42);
 	}
 }

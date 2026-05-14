@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:28:33 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/14 13:26:38 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/14 20:54:36 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,11 @@
 
 typedef struct s_msg	t_msg;
 typedef struct s_args	t_args;
+typedef struct s_queue	t_queue;
 typedef struct s_coder	t_coder;
 typedef struct s_dongle	t_dongle;
 typedef struct s_sim	t_sim;
+
 
 struct s_msg
 {
@@ -54,12 +56,19 @@ struct s_args
 	t_msg	msg;
 };
 
+struct s_queue
+{
+	long	request_time;
+	long	burnout_time;
+};
+
 struct s_dongle
 {
 	int				id;
 	int				is_free;
 	long			release_time;
 	t_args			*args;
+	t_queue			queue[2];
 	pthread_mutex_t	dongle_mutex;
 	pthread_cond_t	dongle_cond;
 };
@@ -70,6 +79,7 @@ struct s_coder
 	int				n_comp;
 	long			start;
 	long			burning;
+	long			request_time;
 	t_args			*args;
 	t_sim			*sim;
 	t_dongle		*d_min;
@@ -81,16 +91,12 @@ struct s_coder
 
 struct s_sim
 {
-	// int				done;
 	int				burnout;
 	long			start;
 	t_args			*args;
-	// t_msg			*msg;
 	t_dongle		*dongles;
 	t_coder			*coders;
-	// pthread_t		*c_threads;
 	pthread_t		monitoring;
-	// pthread_mutex_t *coder_mutex;
 	pthread_mutex_t	burn_mutex;
 	pthread_mutex_t	log_mutex;
 };
@@ -111,6 +117,8 @@ int		init_dongles(t_sim *sim);
 int		init_coders(t_sim *sim);
 int		cleaup_and_return(t_sim *sim, int i, int c_mutex_flag);
 void	*monitor_routine(void *sim);
+void	update_queue_values(t_dongle *d, t_coder *c, int reset);
+int 	is_first(t_dongle *d, t_coder *c);
 
 #endif
 

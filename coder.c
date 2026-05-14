@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/12 22:56:18 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/14 15:59:03 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/14 20:52:19 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,16 @@ int	log_msg(pthread_mutex_t *log_mutex, t_coder *c, char *msg)
 
 void	*coder_routine(void  *coder)
 {
-	t_coder	*c = (t_coder *)coder;
+	t_coder	*c;
 
+	c = (t_coder *)coder;
+	if (c->id % 2)
+		usleep(50);
 	while(c->n_comp < c->args->number_of_compiles_required)
 	{
 		take_dongle(c->d_min, c);
 		if (log_msg(c->log_mutex, c, c->args->msg.dong) != OK)
-			break ;
+		break ;
 		take_dongle(c->d_max, c);
 		if (log_msg(c->log_mutex, c, c->args->msg.dong) != OK)
 			break ;
@@ -70,10 +73,7 @@ void	*coder_routine(void  *coder)
 		if (log_msg(c->log_mutex, c, c->args->msg.rfac) != OK)
 			break ;
 		usleep(c->args->time_to_refactor * 1000);
-		printf(" cazzi amari \n");
 	}
-	if (log_msg(c->log_mutex, c, "SONO USCITO\n") != OK)
-		return (NULL);
 	return (NULL);
 }
 
