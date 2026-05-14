@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:28:33 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/14 20:54:36 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/15 00:15:50 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,7 @@ int		cleaup_and_return(t_sim *sim, int i, int c_mutex_flag);
 void	*monitor_routine(void *sim);
 void	update_queue_values(t_dongle *d, t_coder *c, int reset);
 int 	is_first(t_dongle *d, t_coder *c);
+int		run_simulation(t_sim *sim);
 
 #endif
 

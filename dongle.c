@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 11:40:36 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/14 20:56:01 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/14 23:24:30 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,10 +135,10 @@ int	init_dongles(t_sim *sim)
 		sim->dongles[i].args = sim->args;
 		sim->dongles[i].is_free = TRUE;
 		sim->dongles[i].release_time = get_time() - sim->args->dongle_cooldown;
-		sim->dongles[i].queue[0].burnout_time = get_time();
-		sim->dongles[i].queue[0].request_time = get_time();
-		sim->dongles[i].queue[1].request_time = get_time();
-		sim->dongles[i].queue[1].request_time = get_time();
+		sim->dongles[i].queue[0].request_time = -1;
+		sim->dongles[i].queue[0].burnout_time = -1;
+		sim->dongles[i].queue[1].request_time = -1;
+		sim->dongles[i].queue[1].burnout_time = -1;
 		if (pthread_cond_init(&sim->dongles[i].dongle_cond, NULL) != OK)
 			break ;
 		if (pthread_mutex_init(&sim->dongles[i].dongle_mutex, NULL) != OK)

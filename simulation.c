@@ -6,42 +6,61 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 16:24:38 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/14 18:51:33 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/15 00:15:40 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-// static void	check_cooldown(t_dongle *dongle)
-// {
-// 	// pthread_mutex_lock(&dongle->dongle_mutex);
-// 	if (get_time() - dongle->release_time >= dongle->args->dongle_cooldown)
-// 	{
-// 		// pthread_mutex_unlock(&dongle->dongle_mutex);
-// 		pthread_cond_broadcast(&dongle->dongle_cond);
-// 	}
-// 	// else
-// 		// pthread_mutex_unlock(&dongle->dongle_mutex);
 
-// 	// return ;
-// }
+static int	create_threads(t_sim *sim)
+{
+	int	i;
+
+	i = 0;
+	if (pthread_create(&sim->monitoring,
+		NULL, monitor_routine, &sim) != OK)
+		return (KO);
+	while(i < sim->args->number_of_coders)
+	{
+		if (pthread_create(&sim->coders[i].coding,
+			NULL, coder_routine, &sim->coders[i]) != OK)
+			break ;
+		i++;
+	}
+	return (i);
+}
+
+static int	join_threads(t_sim *sim, int i)
+{
+	int	ret;
+
+	if (i != sim->args->number_of_coders)
+		ret = (KO);
+	else
+		ret = (OK);
+	while(i > 0)
+	{
+		i--;
+		pthread_join(sim->coders[i].coding, NULL);
+	}
+	pthread_join(sim->monitoring, NULL);
+	return (ret);
+}
 
 
-// void	*sim_routine(void *sim)
-// {
-// 	t_sim *s = (t_sim *)sim;
-// 	int d = 0;
-// 	while(1)
-// 	{
-// 		usleep(100);
-// 		d = 0;
-// 		while (d < 2)
-// 		{
-// 			check_cooldown(&s->dongles[d]);
-// 			d++;
-// 		}
-// 	}
-// }
+int	run_simulation(t_sim *sim)
+{
+	int	index;
+	int	result;
+
+	index = create_threads(sim);
+	result = join_threads(sim, index);
+	cleaup_and_return(sim, sim->args->number_of_coders, 1);
+	pthread_mutex_destroy(&sim->burn_mutex);
+	pthread_mutex_destroy(&sim->log_mutex);
+	return (result);
+}
 
 int	init_arrays(t_sim *sim)
 {

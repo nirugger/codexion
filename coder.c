@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/12 22:56:18 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/14 20:52:19 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/14 23:27:30 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,13 @@ void	*coder_routine(void  *coder)
 	t_coder	*c;
 
 	c = (t_coder *)coder;
-	if (c->id % 2)
-		usleep(50);
+	// if (c->id % 2)
+	// 	usleep(50);
 	while(c->n_comp < c->args->number_of_compiles_required)
 	{
 		take_dongle(c->d_min, c);
 		if (log_msg(c->log_mutex, c, c->args->msg.dong) != OK)
-		break ;
+			break ;
 		take_dongle(c->d_max, c);
 		if (log_msg(c->log_mutex, c, c->args->msg.dong) != OK)
 			break ;

@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 22:19:48 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/14 19:03:18 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/14 23:25:16 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,6 @@ void	*monitor_routine(void *sim)
 			}
 			i++;
 		}
-		usleep(42);
+		usleep(10);
 	}
 }
