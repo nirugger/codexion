@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 11:40:36 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/14 03:06:43 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/14 15:58:32 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,11 @@ void	take_dongle(t_dongle *d, t_coder *c)
 	pthread_mutex_lock(&d->dongle_mutex);
 	while (in_cooldown(d) || d->is_free == FALSE)
 	{
+		if (check_burnout(c) == TRUE)
+		{
+			pthread_mutex_unlock(&d->dongle_mutex);
+			return ;
+		}
 		wake_ms = d->release_time + d->args->dongle_cooldown;
 		ts.tv_sec = wake_ms / 1000;
 		ts.tv_nsec = (wake_ms % 1000) * 1000000L;
@@ -32,12 +37,6 @@ void	take_dongle(t_dongle *d, t_coder *c)
 	}
 	d->is_free = FALSE;
 	pthread_mutex_unlock(&d->dongle_mutex);
-	log_msg(c->log_mutex, c->start, c->coder_id, c->args->msg.dong);
-	// check_burnout(coder);
-
-
-
-
 };
 
 void	release_dongle(t_dongle *dongle)
@@ -62,25 +61,37 @@ void	assign_dongles(t_sim *sim)
 		dongle_max = (i + 1) % sim->args->number_of_coders;
 		if (dongle_min < dongle_max)
 		{
-			sim->coders[i].dongle_min = &sim->dongles[dongle_min];
-			sim->coders[i].dongle_max = &sim->dongles[dongle_max];
+			sim->coders[i].d_min = &sim->dongles[dongle_min];
+			sim->coders[i].d_max = &sim->dongles[dongle_max];
 		}
 		else
 		{
-			sim->coders[i].dongle_min = &sim->dongles[dongle_max];
-			sim->coders[i].dongle_max = &sim->dongles[dongle_min];
+			sim->coders[i].d_min = &sim->dongles[dongle_max];
+			sim->coders[i].d_max = &sim->dongles[dongle_min];
 		}
 		i++;
 	}
 }
 
-int	cleaup_and_return(t_sim *sim, int i)
+int	cleaup_and_return(t_sim *sim, int i, int c_mutex_flag)
 {
-	while (i > 0)
+	int	j;
+
+	j = i;
+	if (c_mutex_flag)
 	{
+		j = sim->args->number_of_coders;
+		while (i > 0)
+		{
+			i--;
+			pthread_mutex_destroy(&sim->coders[i].c_mutex);
+		}
+	}
+	while (j > 0)
+	{
+		j--;
 		pthread_cond_destroy(&sim->dongles[i].dongle_cond);
 		pthread_mutex_destroy(&sim->dongles[i].dongle_mutex);
-		i--;
 	}
 	free(sim->coders);
 	free(sim->dongles);
@@ -95,7 +106,7 @@ int	init_dongles(t_sim *sim)
 	i = 0;
 	while (i < sim->args->number_of_coders)
 	{
-		sim->dongles[i].dongle_id = i + 1;
+		sim->dongles[i].id = i + 1;
 		sim->dongles[i].args = sim->args;
 		sim->dongles[i].is_free = TRUE;
 		sim->dongles[i].release_time = get_time() - sim->args->dongle_cooldown;
@@ -109,6 +120,6 @@ int	init_dongles(t_sim *sim)
 		i++;
 	}
 	if (i != sim->args->number_of_coders)
-		return (cleaup_and_return(sim, i - 1));
+		return (cleaup_and_return(sim, i, 0));
 	return (OK);
 }

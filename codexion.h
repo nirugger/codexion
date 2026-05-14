@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:28:33 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/14 03:08:32 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/14 13:26:38 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ struct s_args
 
 struct s_dongle
 {
-	int				dongle_id;
+	int				id;
 	int				is_free;
 	long			release_time;
 	t_args			*args;
@@ -66,30 +66,30 @@ struct s_dongle
 
 struct s_coder
 {
-	int				coder_id;
-	int				total_compile;
+	int				id;
+	int				n_comp;
 	long			start;
-	long			start_compiling;
+	long			burning;
 	t_args			*args;
 	t_sim			*sim;
-	t_dongle		*dongle_min;
-	t_dongle		*dongle_max;
-	pthread_t		code;
-	pthread_mutex_t	*burn_mutex;
+	t_dongle		*d_min;
+	t_dongle		*d_max;
+	pthread_t		coding;
+	pthread_mutex_t	c_mutex;
 	pthread_mutex_t *log_mutex;
 };
 
 struct s_sim
 {
-	int				done;
+	// int				done;
 	int				burnout;
 	long			start;
 	t_args			*args;
-	t_msg			*msg;
+	// t_msg			*msg;
 	t_dongle		*dongles;
 	t_coder			*coders;
 	// pthread_t		*c_threads;
-	pthread_t		*monitoring;
+	pthread_t		monitoring;
 	// pthread_mutex_t *coder_mutex;
 	pthread_mutex_t	burn_mutex;
 	pthread_mutex_t	log_mutex;
@@ -104,12 +104,13 @@ void	release_dongle(t_dongle *dongle);
 int		check_burnout(t_coder *coder);
 // void	*sim_routine(void *sim);
 int		in_cooldown(t_dongle *dongle);
-void	log_msg(pthread_mutex_t *log_mutex, long t, int id, char *msg);
+int		log_msg(pthread_mutex_t *log_mutex, t_coder *c, char *msg);
 void	assign_dongles(t_sim *sim);
 int		init_simulation(t_args *args, t_sim *sim);
 int		init_dongles(t_sim *sim);
-void	init_coders(t_sim *sim);
-int		cleaup_and_return(t_sim *sim, int i);
+int		init_coders(t_sim *sim);
+int		cleaup_and_return(t_sim *sim, int i, int c_mutex_flag);
+void	*monitor_routine(void *sim);
 
 #endif
 

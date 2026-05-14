@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 16:24:38 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/14 03:10:56 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/14 11:34:07 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,19 +63,22 @@ int	init_simulation(t_args *args, t_sim *sim)
 	sim->args = args;
 	if (init_arrays(sim) != OK)
 		return (KO);
+
 	sim->start = get_time();
 	sim->burnout = FALSE;
-	sim->done = 0;
+	// sim->done = 0;
+
 	if (init_dongles(sim) != OK)
 		return (KO);
-	init_coders(sim);
+	if (init_coders(sim) != OK)
+		return (KO);
 	assign_dongles(sim);
 	if (pthread_mutex_init(&sim->log_mutex, NULL) != OK)
-		return (cleaup_and_return(sim, sim->args->number_of_coders));
+		return (cleaup_and_return(sim, sim->args->number_of_coders, 1));
 	if (pthread_mutex_init(&sim->burn_mutex, NULL) != OK)
 	{
 		pthread_mutex_destroy(&sim->log_mutex);
-		return (cleaup_and_return(sim, sim->args->number_of_coders));
+		return (cleaup_and_return(sim, sim->args->number_of_coders, 1));
 	}
 	return (OK);
 }
