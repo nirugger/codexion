@@ -1,6 +1,19 @@
 NAME	= codexion
 
+N_CODERS	= 5
+BURNOUT		= 1200
+COMPILE		= 200
+DEBUG		= 200
+REFACTOR	= 200
+N_COMPILES	= 5
+COOLDOWN	= 100
+SCHEDULER	= fifo
+TVANNI	= $(NAME) $(N_CODERS) $(BURNOUT) $(COMPILE) $(DEBUG) $(REFACTOR) $(N_COMPILES) $(COOLDOWN) $(SCHEDULER)
+
 CC		= cc
+VG		= valgrind
+HG		= --tool=helgrind
+VF		= --leak-check=full
 CFLAGS	= -Wall -Wextra -Werror -pthread
 
 SRCS	= main.c \
@@ -29,17 +42,14 @@ fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
-
-N_CODERS	= 5
-BURNOUT		= 1000
-COMPILE		= 200
-DEBUG		= 200
-REFACTOR	= 200
-N_COMPILES	= 5
-COOLDOWN	= 100
-SCHEDULER	= edf
  
 run: $(NAME)
-	./$(NAME) $(N_CODERS) $(BURNOUT) $(COMPILE) $(DEBUG) $(REFACTOR) $(N_COMPILES) $(COOLDOWN) $(SCHEDULER)
+	./$(TVANNI)
 
-.PHONY: all clean fclean re run
+valgrind: $(NAME)
+	$(VG) $(VF) ./$(TVANNI)
+
+helgrind: $(NAME)
+	$(VG) $(HG) ./$(TVANNI)
+
+.PHONY: all clean fclean re run valgrind helgrind
