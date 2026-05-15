@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:28:33 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/15 00:15:50 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/15 03:30:27 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,11 @@
 # include <sys/time.h>
 # include <pthread.h>
 
+/*
+ * Core structures of the Codexion simulator.
+ * Used to describe coders, dongles, wait queues, and global state.
+ */
+
 # define TRUE 1
 # define FALSE 0
 
@@ -32,7 +37,6 @@ typedef struct s_queue	t_queue;
 typedef struct s_coder	t_coder;
 typedef struct s_dongle	t_dongle;
 typedef struct s_sim	t_sim;
-
 
 struct s_msg
 {
@@ -86,7 +90,7 @@ struct s_coder
 	t_dongle		*d_max;
 	pthread_t		coding;
 	pthread_mutex_t	c_mutex;
-	pthread_mutex_t *log_mutex;
+	pthread_mutex_t	*log_mutex;
 };
 
 struct s_sim
@@ -101,37 +105,19 @@ struct s_sim
 	pthread_mutex_t	log_mutex;
 };
 
+/// --- INIT & RUN -----------------------------------------------------------
 int		validate_args(int argc, char **argv, t_args *args);
-void	*coder_routine(void  *c);
-int		error(void);
-long	get_time(void);
-void	take_dongle(t_dongle *d, t_coder *c);
-void	release_dongle(t_dongle *dongle);
-int		check_burnout(t_coder *coder);
-// void	*sim_routine(void *sim);
-int		in_cooldown(t_dongle *dongle);
-int		log_msg(pthread_mutex_t *log_mutex, t_coder *c, char *msg);
-void	assign_dongles(t_sim *sim);
-int		init_simulation(t_args *args, t_sim *sim);
-int		init_dongles(t_sim *sim);
-int		init_coders(t_sim *sim);
-int		cleaup_and_return(t_sim *sim, int i, int c_mutex_flag);
+int		init_codexion(t_args *args, t_sim *sim);
+int		run_codexion(t_sim *sim);
 void	*monitor_routine(void *sim);
+void	*coder_routine(void *c);
+
+/// --- HELPS & FRIENDS ------------------------------------------------------
+int		check_burnout(t_coder *coder);
+int		is_first(t_dongle *d, t_coder *c);
 void	update_queue_values(t_dongle *d, t_coder *c, int reset);
-int 	is_first(t_dongle *d, t_coder *c);
-int		run_simulation(t_sim *sim);
+int		free_mutex_and_arrays(t_sim *sim, int i, int c_mutex_flag);
+long	get_time(void);
+int		error(void);
 
 #endif
-
-
-//	pthread_mutex_init()
-//	pthread_mutex_lock()
-//		sezione critica
-//	pthread_cond_broadcast()
-//	pthread_mutex_unlock()
-
-// while (pthread_cond_wait(&cond))
-// {
-// 	continue;
-// };
-// pthread_mutex_lock;

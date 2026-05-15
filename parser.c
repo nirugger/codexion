@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:32:57 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/13 23:13:57 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/15 03:43:29 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ static int	is_valid_integer(char *arg)
 	return (TRUE);
 }
 
-/// @brief Fill 't_args' struct with validated arguments. 
-/// @param argv : arguments.
-/// @param args : 't_args" struct.
+/// @brief Fill the t_args struct with validated arguments.
+/// @param argv Arguments.
+/// @param args t_args struct.
 static void	fill_args(char **argv, t_args *args)
 {
 	args->number_of_coders = atoi(argv[1]);
@@ -55,11 +55,11 @@ static void	fill_args(char **argv, t_args *args)
 	args->msg.rfac = "is refactoring";
 }
 
-/// @brief Validate the arguments and fill t_args struct.
-/// @param argc : number of arguments.
-/// @param argv : arguments.
-/// @param args : 't_args' struct.
-/// @return : 'KO' if arguments aren't valid, 'OK' otherwise.
+/// @brief Validate the arguments and fill the t_args struct.
+/// @param argc Number of arguments.
+/// @param argv Arguments.
+/// @param args t_args struct.
+/// @return OK if arguments are valid, KO otherwise.
 int	validate_args(int argc, char **argv, t_args *args)
 {
 	int	i;
