@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/14 00:32:10 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/15 03:38:30 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/15 10:32:48 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static void	take_dongle(t_dongle *d, t_coder *c)
 	struct timespec	ts;
 
 	pthread_mutex_lock(&d->dongle_mutex);
-	update_queue_values(d, c, 0);
+	update_queue_values(d, c, FALSE);
 	while (get_time() - d->release_time < d->args->dongle_cooldown
 		|| d->is_free == FALSE || !is_first(d, c))
 	{
@@ -59,7 +59,7 @@ static void	take_dongle(t_dongle *d, t_coder *c)
 		ts.tv_nsec = (wake_ms % 1000) * 1000000L;
 		pthread_cond_timedwait(&d->dongle_cond, &d->dongle_mutex, &ts);
 	}
-	update_queue_values(d, c, 1);
+	update_queue_values(d, c, TRUE);
 	d->is_free = FALSE;
 	pthread_mutex_unlock(&d->dongle_mutex);
 }
