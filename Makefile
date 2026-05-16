@@ -52,7 +52,6 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
-	@$(NL)
 	@echo "$(GREEN)codexion made ✓$(RESET)"
 
 %.o: %.c codexion.h

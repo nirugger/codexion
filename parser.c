@@ -6,13 +6,27 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:32:57 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/16 13:06:16 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/16 18:25:49 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-/// @brief Ask if arg is a valid positive integer.
+/// @brief Asks if flag is a valid flag.
+/// @param arg : the flag to check.
+/// @return 'TRUE' if it is a valid flag, 'FALSE' otherwise.
+static int	is_valid_flag(char *flag)
+{
+	if (strcmp(flag, "--visual") != 0)
+	{
+		printf("%s[ERROR]:%s unrecognised argument '%s'. ", RED, RESET, flag);
+		printf("Did you mean '--visual'?\n");
+		return (FALSE);
+	}
+	return (TRUE);
+}
+
+/// @brief Asks if arg is a valid positive integer.
 /// @param arg : the string to be parsed.
 /// @return 'TRUE' if it is a valid positive integer, 'FALSE' otherwise.
 static int	is_valid_integer(char *arg)
@@ -65,7 +79,7 @@ int	validate_args(int argc, char **argv, t_args *args)
 	int	i;
 
 	args->visual = 0;
-	if (argc == 10 && strcmp(argv[9], "--visual") == 0)
+	if (argc == 10 && is_valid_flag(argv[9]))
 	{
 		args->visual = 1;
 		argc -= 1;

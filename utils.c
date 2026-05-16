@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 19:08:35 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/16 13:12:19 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/16 22:41:50 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,20 +75,22 @@ int	check_burnout(t_coder *coder)
 	return (result);
 }
 
-/// @brief Checks whether a dongle is still in cooldown.
-/// @param d Dongle to check.
-/// @return TRUE if the dongle is in cooldown, FALSE otherwise.
+/// @brief Gets colour prefixes for simulation logs.
+/// @param c Coder needed for sim struct access.
+/// @param msg The log deciding which color is returned.
+/// @param color The original natural color.
+/// @return The prefix that gives the color.
 char	*get_color(t_coder *c, char *msg, char *color)
 {
 	if (strcmp(msg, c->args->msg.dong) == 0)
 		color = YELLOW;
-	if (strcmp(msg, c->args->msg.burn) == 0)
+	else if (strcmp(msg, c->args->msg.burn) == 0)
 		color = RED;
-	if (strcmp(msg, c->args->msg.comp) == 0)
+	else if (strcmp(msg, c->args->msg.comp) == 0)
 		color = GREEN;
-	if (strcmp(msg, c->args->msg.dbug) == 0)
+	else if (strcmp(msg, c->args->msg.dbug) == 0)
 		color = MAGENTA;
-	if (strcmp(msg, c->args->msg.rfac) == 0)
+	else if (strcmp(msg, c->args->msg.rfac) == 0)
 		color = CYAN;
 	return (color);
 }
