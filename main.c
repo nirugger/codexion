@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:25:00 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/15 22:25:54 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/16 03:30:26 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,7 @@ int	main(int argc, char **argv)
 		return (error());
 	if (run_codexion(&sim) != OK)
 		return (error());
+	if (sim.burnout == TRUE)
+		return (KO);
 	return (OK);
 }

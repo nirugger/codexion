@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:32:57 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/15 03:43:29 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/16 03:49:30 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,15 @@ static void	fill_args(char **argv, t_args *args)
 	args->number_of_compiles_required = atoi(argv[6]);
 	args->dongle_cooldown = atoi(argv[7]);
 	args->scheduler = argv[8];
+	if (args->visual == TRUE)
+	{
+		args->msg.dong = YELLOW "has taken a dongle" RESET;
+		args->msg.burn = RED "burned out" RESET;
+		args->msg.comp = GREEN "is compiling" RESET;
+		args->msg.dbug = MAGENTA "is debugging" RESET;
+		args->msg.rfac = CYAN "is refactoring" RESET;
+		return ;
+	}
 	args->msg.dong = "has taken a dongle";
 	args->msg.burn = "burned out";
 	args->msg.comp = "is compiling";
@@ -64,8 +73,17 @@ int	validate_args(int argc, char **argv, t_args *args)
 {
 	int	i;
 
-	if (argc != 9)
-		return (KO);
+	args->visual = 0;
+	if (argc == 10 && strcmp(argv[9], "--visual") == 0)
+	{
+		args->visual = 1;
+		argc -= 1;
+	}
+	else
+	{
+		if (argc != 9)
+			return (KO);
+	}
 	i = 1;
 	while (i < argc - 1)
 	{

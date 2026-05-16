@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 19:08:35 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/15 04:16:49 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/16 03:16:28 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 /// @return KO.
 int	error(void)
 {
-	printf("[ERROR]");
+	printf("[ERROR]\n");
 	return (KO);
 }
 

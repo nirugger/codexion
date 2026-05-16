@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:28:33 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/15 10:25:11 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/16 03:49:35 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,14 @@
 
 # define OK 0
 # define KO 1
+
+# define RED "\033[0;31m"
+# define GREEN "\033[0;32m"
+# define YELLOW "\033[0;33m"
+# define BLU "\033[0;34m"
+# define MAGENTA "\033[0;35m"
+# define CYAN "\033[0;36m"
+# define RESET "\033[0m"
 
 typedef struct s_msg	t_msg;
 typedef struct s_args	t_args;
@@ -58,6 +66,7 @@ struct s_args
 	long	dongle_cooldown;
 	char	*scheduler;
 	t_msg	msg;
+	int		visual;
 };
 
 struct s_queue
