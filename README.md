@@ -62,11 +62,6 @@ Same scenario with Earliest Deadline First scheduling:
 ./codexion 5 800 200 200 200 10 100 edf
 ```
 
-Single coder (only one dongle needed):
-```bash
-./codexion 1 500 100 100 100 5 50 fifo
-```
-
 ### Output format
 
 Every state change is logged as:
@@ -168,5 +163,3 @@ Claude (Anthropic) was used as a support tool during this project in the followi
 - **Design discussion**: brainstorming the queue structure for FIFO/EDF arbitration and validating that the resource-ordering approach correctly breaks the circular-wait condition.
 - **Code review**: reviewing `take_dongle()` and `is_first()` for correctness of the timedwait timeout calculation and queue index mapping.
 - **Documentation**: drafting and refining this README, in particular the technical descriptions of the synchronization mechanisms and blocking cases.
-
-All code was written, reviewed, and fully understood by the author. AI-generated suggestions were verified against the subject requirements and tested before integration.

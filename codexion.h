@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:28:33 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/16 03:49:35 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/16 13:12:10 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,7 @@ int		check_burnout(t_coder *coder);
 int		is_first(t_dongle *d, t_coder *c);
 void	update_queue_values(t_dongle *d, t_coder *c, int reset);
 int		free_mutex_and_arrays(t_sim *sim, int i, int c_mutex_flag);
+char	*get_color(t_coder *c, char *msg, char *color);
 long	get_time(void);
 int		error(void);
 

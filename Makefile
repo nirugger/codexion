@@ -10,14 +10,16 @@ COOLDOWN	= 100
 SCHEDULER	= fifo
 VISUAL		= --visual
 
-RUN		= $(NAME) $(N_CODERS) $(BURNOUT) $(COMPILE) $(DEBUG) $(REFACTOR) $(N_COMPILES) $(COOLDOWN) $(SCHEDULER)
-LINTRUN	= $(NAME) 3 2000 200 200 200 3 150 fifo
-FULLRUN	= $(NAME) 42 7492 420 372 291 5 226 fifo --visual
+STDRUN	= $(NAME) $(N_CODERS) $(BURNOUT) $(COMPILE) $(DEBUG) $(REFACTOR) $(N_COMPILES) $(COOLDOWN) $(SCHEDULER)
+LNTRUN	= $(NAME) 3 2000 200 200 200 3 150 fifo
+FTSRUN	= $(NAME) 42 7492 420 372 291 4 226 fifo --visual
 
 
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror -pthread
+
 TRUEFALSE	= && echo "$(GREEN)OK!$(RESET)" || echo "$(RED)KO!$(RESET)"
+NL			= echo ""
 
 NORM		= norminette
 NORMFLAGS	= >/dev/null 2>&1
@@ -49,10 +51,13 @@ OBJS	= $(SRCS:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+	@$(NL)
+	@echo "$(GREEN)codexion made ✓$(RESET)"
 
 %.o: %.c codexion.h
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
+
 
 clean:
 	@rm -f $(OBJS)
@@ -67,43 +72,61 @@ fclean:
 re: fclean all
 
 run: $(NAME)
-	clear
-	@echo "$(WHITE)entering the Codexion...$(RESET)"
-	@./$(RUN) \
+	@$(NL)
+	@echo "$(WHITE)entering the codexion...$(RESET)"
+	@./$(STDRUN) \
 	$(TRUEFALSE)
+	@$(NL)
+	@rm -f $(OBJS)
+	@echo "$(GREEN)clean made ✓$(RESET)"
 
 lint:
-	clear
+	@$(NL)
 	@echo "$(YELLOW)norminetting...$(RESET)"
 	@$(NORM) \
 	$(TRUEFALSE)
+	@$(NL)
+	@sleep 1
 
 val: $(NAME)
+	@$(NL)
 	@echo "$(MAGENTA)valgrinding...$(RESET)"
-	@$(VAL) $(VALFLAGS) ./$(LINTRUN)
+	@$(VAL) $(VALFLAGS) ./$(LNTRUN)
 	@echo "$(MAGENTA)valgrinded ✓$(RESET)"
+	@$(NL)
+	@sleep 1
 
 hel: $(NAME)
+	@$(NL)
 	@echo "$(RED)helgrinding...$(RESET)"
-	@$(VAL) $(HEL) $(HELFLAGS) ./$(LINTRUN)
+	@$(VAL) $(HEL) $(HELFLAGS) ./$(LNTRUN)
 	@echo "$(RED)helgrinded ✓$(RESET)"
+	@$(NL)
+	@sleep 1
 
 lint-strict: lint val hel
 
 run--visual: $(NAME)
 	clear
-	@echo "$(BLUE)entering the Codexion...$(RESET)"
-	@./$(RUN) $(VISUAL) \
+	@echo "$(BLUE)entering the codexion...$(RESET)"
+	@./$(STDRUN) $(VISUAL)\
 	$(TRUEFALSE)
+	@$(NL)
+	@rm -f $(OBJS)
+	@echo "$(GREEN)clean made ✓$(RESET)"
 
 frun: fclean all lint-strict
-	clear
-	@echo "$(BLUE)entering the Codexion...$(RESET)"
+	@$(NL)
+	@echo "$(BLUE)entering the codexion...$(RESET)"
 	@sleep 2
-	clear
-	@echo "$(MAGENTA)the Codexion begins!$(RESET)"
-	@./$(FULLRUN) \
+	@echo "$(MAGENTA)the codexion begins!$(RESET)"
+	@$(NL)
+	@sleep 1
+	@./$(FTSRUN) \
 	$(TRUEFALSE)
-
+	@$(NL)
+	@rm -f $(OBJS)
+	@rm -f $(NAME)
+	@echo "$(GREEN)fclean made ✓✓✓$(RESET)"
 
 .PHONY: all clean fclean re run lint val hel lint-strict run--visual frun

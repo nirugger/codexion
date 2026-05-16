@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:32:57 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/16 03:49:30 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/16 13:06:16 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,15 +48,6 @@ static void	fill_args(char **argv, t_args *args)
 	args->number_of_compiles_required = atoi(argv[6]);
 	args->dongle_cooldown = atoi(argv[7]);
 	args->scheduler = argv[8];
-	if (args->visual == TRUE)
-	{
-		args->msg.dong = YELLOW "has taken a dongle" RESET;
-		args->msg.burn = RED "burned out" RESET;
-		args->msg.comp = GREEN "is compiling" RESET;
-		args->msg.dbug = MAGENTA "is debugging" RESET;
-		args->msg.rfac = CYAN "is refactoring" RESET;
-		return ;
-	}
 	args->msg.dong = "has taken a dongle";
 	args->msg.burn = "burned out";
 	args->msg.comp = "is compiling";

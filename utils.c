@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 19:08:35 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/16 03:16:28 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/16 13:12:19 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,17 @@ int	check_burnout(t_coder *coder)
 /// @brief Checks whether a dongle is still in cooldown.
 /// @param d Dongle to check.
 /// @return TRUE if the dongle is in cooldown, FALSE otherwise.
-int	in_cooldown(t_dongle *d)
+char	*get_color(t_coder *c, char *msg, char *color)
 {
-	return (get_time() - d->release_time < d->args->dongle_cooldown);
+	if (strcmp(msg, c->args->msg.dong) == 0)
+		color = YELLOW;
+	if (strcmp(msg, c->args->msg.burn) == 0)
+		color = RED;
+	if (strcmp(msg, c->args->msg.comp) == 0)
+		color = GREEN;
+	if (strcmp(msg, c->args->msg.dbug) == 0)
+		color = MAGENTA;
+	if (strcmp(msg, c->args->msg.rfac) == 0)
+		color = CYAN;
+	return (color);
 }

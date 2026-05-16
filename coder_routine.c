@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/14 00:32:10 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/15 12:28:37 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/16 13:12:22 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,10 @@ static int	log_msg(pthread_mutex_t *log_mutex, t_coder *c, char *msg)
 {
 	int		id;
 	long	t;
+	char	*color;
 
 	id = c->id;
+	color = RESET;
 	t = get_time() - c->start;
 	pthread_mutex_lock(log_mutex);
 	if (check_burnout(c))
@@ -30,7 +32,9 @@ static int	log_msg(pthread_mutex_t *log_mutex, t_coder *c, char *msg)
 		pthread_mutex_unlock(log_mutex);
 		return (KO);
 	}
-	printf("%ld ms -> coder %d %s\n", t, id, msg);
+	if (c->args->visual)
+		color = get_color(c, msg, color);
+	printf("%s%ld ms -> coder %d %s%s\n", color, t, id, msg, RESET);
 	pthread_mutex_unlock(log_mutex);
 	return (OK);
 }
