@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 22:19:48 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/15 22:35:45 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/17 21:15:21 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,9 @@ void	*monitor_routine(void *sim)
 	s = (t_sim *)sim;
 	while (coders_out < s->args->number_of_coders)
 	{
+		if (check_burnout(s->coders))
+			break ;
+		coders_out = 0;
 		coders_out = monitor_checks(s, coders_out);
 		if (coders_out == -1)
 			return (NULL);
