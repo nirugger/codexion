@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/14 00:32:10 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/16 13:12:22 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/17 03:24:04 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,12 @@ static int	log_msg(pthread_mutex_t *log_mutex, t_coder *c, char *msg)
 		return (KO);
 	}
 	if (c->args->visual)
+	{
 		color = get_color(c, msg, color);
-	printf("%s%ld ms -> coder %d %s%s\n", color, t, id, msg, RESET);
+		printf("%s%*ld -> %*d %s%s\n", color, 5, t, 3, id, msg, RESET);
+	}
+	else
+		printf("%*ld %*d %s\n", 5, t, 3, id, msg);
 	pthread_mutex_unlock(log_mutex);
 	return (OK);
 }
