@@ -59,7 +59,7 @@ this:
 	@printf "    ╔                                                 ╗\n"
 	@printf "    ║  st :  $(ST)            ║\n"
 	@printf "    ║  lt :  $(LT)            ║\n"
-	@printf "    ║  ft : $(FT)    ║\n"
+	@printf "    ║  ft : $(FT)   ║\n"
 	@printf "    ╚                                                 ╝\n"
 	@printf "\n"
 	@printf "      make            this\n"
