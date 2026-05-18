@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:28:33 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/18 01:34:34 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/18 02:58:56 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ struct s_dongle
 struct s_coder
 {
 	int				id;
+	char			*name;
 	int				n_comp;
 	long			start;
 	long			last_comp;
@@ -112,6 +113,7 @@ struct s_sim
 {
 	int				burnout;
 	long			start;
+	char			**names;
 	t_args			*args;
 	t_dongle		*dongles;
 	t_coder			*coders;
