@@ -6,40 +6,39 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/14 00:32:10 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/17 18:12:15 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/18 01:24:33 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
 /// @brief Prints a synchronized message if the simulation is still active.
-/// @param log_mutex Shared mutex for printing.
+/// @param log_mtx Shared mutex for printing.
 /// @param c Coder that is logging.
 /// @param msg Message to print.
 /// @return OK if the message was printed, KO if burnout has already occurred.
-static int	log_msg(pthread_mutex_t *log_mutex, t_coder *c, char *msg)
+static int	log_msg(pthread_mutex_t *log_mtx, t_coder *c, char *msg)
 {
 	int		id;
 	long	t;
-	char	*color;
+	char	*rgb;
+	char	*face;
 
 	id = c->id;
-	color = RESET;
+	rgb = get_color(c, msg);
+	face = get_face(c, msg);
 	t = get_time() - c->start;
-	pthread_mutex_lock(log_mutex);
+	pthread_mutex_lock(log_mtx);
 	if (check_burnout(c))
 	{
-		pthread_mutex_unlock(log_mutex);
+		pthread_mutex_unlock(log_mtx);
 		return (KO);
 	}
 	if (c->args->visual)
-	{
-		color = get_color(c, msg, color);
-		printf("%s%*ld -> %*d %s%s\n", color, 5, t, 3, id, msg, RESET);
-	}
+		printf("%s%s  %*ld -> %*d %s%s\n", rgb, face, 7, t, 3, id, msg, RESET);
 	else
 		printf("%*ld %*d %s\n", 5, t, 3, id, msg);
-	pthread_mutex_unlock(log_mutex);
+	pthread_mutex_unlock(log_mtx);
 	return (OK);
 }
 
@@ -51,7 +50,7 @@ static void	take_dongle(t_dongle *d, t_coder *c)
 	long			wake_ms;
 	struct timespec	ts;
 
-	pthread_mutex_lock(&d->dongle_mutex);
+	pthread_mutex_lock(&d->d_mtx);
 	update_queue_values(d, c, FALSE);
 	while (get_time() - d->release_time < d->args->dongle_cooldown
 		|| d->is_free == FALSE || !is_first(d, c))
@@ -59,28 +58,28 @@ static void	take_dongle(t_dongle *d, t_coder *c)
 		if (check_burnout(c) == TRUE)
 		{
 			update_queue_values(d, c, 1);
-			pthread_mutex_unlock(&d->dongle_mutex);
+			pthread_mutex_unlock(&d->d_mtx);
 			return ;
 		}
 		wake_ms = d->release_time + d->args->dongle_cooldown;
 		ts.tv_sec = wake_ms / 1000;
 		ts.tv_nsec = (wake_ms % 1000) * 1000000L;
-		pthread_cond_timedwait(&d->dongle_cond, &d->dongle_mutex, &ts);
+		pthread_cond_timedwait(&d->d_cnd, &d->d_mtx, &ts);
 	}
 	update_queue_values(d, c, TRUE);
 	d->is_free = FALSE;
-	pthread_mutex_unlock(&d->dongle_mutex);
+	pthread_mutex_unlock(&d->d_mtx);
 }
 
 /// @brief Releases a dongle and updates its cooldown timer.
-///	pthread_cond_broadcast(&dongle->dongle_cond);
+///	pthread_cond_broadcast(&dongle->d_cnd);
 /// @param dongle Dongle to release.
 static void	release_dongle(t_dongle *dongle)
 {
-	pthread_mutex_lock(&dongle->dongle_mutex);
+	pthread_mutex_lock(&dongle->d_mtx);
 	dongle->is_free = TRUE;
 	dongle->release_time = get_time();
-	pthread_mutex_unlock(&dongle->dongle_mutex);
+	pthread_mutex_unlock(&dongle->d_mtx);
 }
 
 /// @brief Performs the compilation cycle for a coder.
@@ -89,17 +88,17 @@ static void	release_dongle(t_dongle *dongle)
 static int	compile(t_coder *c)
 {
 	take_dongle(c->d_min, c);
-	if (log_msg(c->log_mutex, c, c->args->msg.dong) != OK)
+	if (log_msg(c->log_mtx, c, c->args->msg.dong) != OK)
 		return (KO);
 	take_dongle(c->d_max, c);
-	if (log_msg(c->log_mutex, c, c->args->msg.dong) != OK)
+	if (log_msg(c->log_mtx, c, c->args->msg.dong) != OK)
 		return (KO);
-	if (log_msg(c->log_mutex, c, c->args->msg.comp) != OK)
+	if (log_msg(c->log_mtx, c, c->args->msg.comp) != OK)
 		return (KO);
-	pthread_mutex_lock(&c->c_mutex);
-	c->burning = get_time();
+	pthread_mutex_lock(&c->c_mtx);
+	c->last_comp = get_time();
 	c->n_comp++;
-	pthread_mutex_unlock(&c->c_mutex);
+	pthread_mutex_unlock(&c->c_mtx);
 	usleep(c->args->time_to_compile * 1000);
 	release_dongle(c->d_min);
 	release_dongle(c->d_max);
@@ -120,10 +119,10 @@ void	*coder_routine(void *coder)
 	{
 		if (compile(c) != OK)
 			break ;
-		if (log_msg(c->log_mutex, c, c->args->msg.dbug) != OK)
+		if (log_msg(c->log_mtx, c, c->args->msg.dbug) != OK)
 			break ;
 		usleep(c->args->time_to_debug * 1000);
-		if (log_msg(c->log_mutex, c, c->args->msg.rfac) != OK)
+		if (log_msg(c->log_mtx, c, c->args->msg.rfac) != OK)
 			break ;
 		usleep(c->args->time_to_refactor * 1000);
 	}

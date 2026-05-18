@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/15 02:24:15 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/15 04:17:38 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/17 22:22:19 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,11 @@ static int	init_dongles(t_sim *sim)
 		sim->dongles[i].queue[0].burnout_time = -1;
 		sim->dongles[i].queue[1].request_time = -1;
 		sim->dongles[i].queue[1].burnout_time = -1;
-		if (pthread_cond_init(&sim->dongles[i].dongle_cond, NULL) != OK)
+		if (pthread_cond_init(&sim->dongles[i].d_cnd, NULL) != OK)
 			break ;
-		if (pthread_mutex_init(&sim->dongles[i].dongle_mutex, NULL) != OK)
+		if (pthread_mutex_init(&sim->dongles[i].d_mtx, NULL) != OK)
 		{
-			pthread_cond_destroy(&sim->dongles[i].dongle_cond);
+			pthread_cond_destroy(&sim->dongles[i].d_cnd);
 			break ;
 		}
 		i++;
@@ -72,11 +72,11 @@ static int	init_coders(t_sim *sim)
 	while (i < sim->args->number_of_coders)
 	{
 		sim->coders[i].id = i + 1;
-		sim->coders[i].log_mutex = &sim->log_mutex;
+		sim->coders[i].log_mtx = &sim->log_mtx;
 		sim->coders[i].n_comp = 0;
 		sim->coders[i].args = sim->args;
 		sim->coders[i].sim = sim;
-		if (pthread_mutex_init(&sim->coders[i].c_mutex, NULL) != OK)
+		if (pthread_mutex_init(&sim->coders[i].c_mtx, NULL) != OK)
 			return (free_mutex_and_arrays(sim, i, 1));
 		i++;
 	}
@@ -125,11 +125,11 @@ int	init_codexion(t_args *args, t_sim *sim)
 	if (init_coders(sim) != OK)
 		return (KO);
 	assign_dongles(sim);
-	if (pthread_mutex_init(&sim->log_mutex, NULL) != OK)
+	if (pthread_mutex_init(&sim->log_mtx, NULL) != OK)
 		return (free_mutex_and_arrays(sim, sim->args->number_of_coders, 1));
 	if (pthread_mutex_init(&sim->burn_mutex, NULL) != OK)
 	{
-		pthread_mutex_destroy(&sim->log_mutex);
+		pthread_mutex_destroy(&sim->log_mtx);
 		return (free_mutex_and_arrays(sim, sim->args->number_of_coders, 1));
 	}
 	return (OK);

@@ -6,19 +6,11 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 19:08:35 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/16 22:41:50 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/17 23:42:32 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
-
-/// @brief Prints a generic error message.
-/// @return KO.
-int	error(void)
-{
-	printf("[ERROR]\n");
-	return (KO);
-}
 
 /// @brief Returns the current time in milliseconds.
 /// @return Current time in ms.
@@ -33,27 +25,27 @@ long	get_time(void)
 /// @brief Frees mutexes, conds, coders and dongles when needed.
 /// @param sim Shared simulation structure.
 /// @param i Number of sync object to destroy.
-/// @param c_mutex_flag 0 to keep coders mutexes, 1 for destroy them.
+/// @param c_mtx_flag 0 to keep coders mutexes, 1 for destroy them.
 /// @return KO.
-int	free_mutex_and_arrays(t_sim *sim, int i, int c_mutex_flag)
+int	free_mutex_and_arrays(t_sim *sim, int i, int c_mtx_flag)
 {
 	int	j;
 
 	j = i;
-	if (c_mutex_flag)
+	if (c_mtx_flag)
 	{
 		j = sim->args->number_of_coders;
 		while (i > 0)
 		{
 			i--;
-			pthread_mutex_destroy(&sim->coders[i].c_mutex);
+			pthread_mutex_destroy(&sim->coders[i].c_mtx);
 		}
 	}
 	while (j > 0)
 	{
 		j--;
-		pthread_cond_destroy(&sim->dongles[j].dongle_cond);
-		pthread_mutex_destroy(&sim->dongles[j].dongle_mutex);
+		pthread_cond_destroy(&sim->dongles[j].d_cnd);
+		pthread_mutex_destroy(&sim->dongles[j].d_mtx);
 	}
 	free(sim->coders);
 	free(sim->dongles);
@@ -80,8 +72,11 @@ int	check_burnout(t_coder *coder)
 /// @param msg The log deciding which color is returned.
 /// @param color The original natural color.
 /// @return The prefix that gives the color.
-char	*get_color(t_coder *c, char *msg, char *color)
+char	*get_color(t_coder *c, char *msg)
 {
+	char	*color;
+
+	color = RESET;
 	if (strcmp(msg, c->args->msg.dong) == 0)
 		color = YELLOW;
 	else if (strcmp(msg, c->args->msg.burn) == 0)
@@ -93,4 +88,22 @@ char	*get_color(t_coder *c, char *msg, char *color)
 	else if (strcmp(msg, c->args->msg.rfac) == 0)
 		color = CYAN;
 	return (color);
+}
+
+char	*get_face(t_coder *c, char *msg)
+{
+	char	*face;
+
+	face = "";
+	if (strcmp(msg, c->args->msg.dong) == 0)
+		face = DNG;
+	else if (strcmp(msg, c->args->msg.burn) == 0)
+		face = BRN;
+	else if (strcmp(msg, c->args->msg.comp) == 0)
+		face = CMP;
+	else if (strcmp(msg, c->args->msg.dbug) == 0)
+		face = DBG;
+	else if (strcmp(msg, c->args->msg.rfac) == 0)
+		face = RFC;
+	return (face);
 }

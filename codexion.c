@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 16:24:38 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/15 04:16:02 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/17 22:22:58 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	set_start(t_sim *sim)
 	while (i < sim->args->number_of_coders)
 	{
 		sim->coders[i].start = sim->start;
-		sim->coders[i].burning = sim->start;
+		sim->coders[i].last_comp = sim->start;
 		i++;
 	}
 	return ;
@@ -42,7 +42,7 @@ static int	create_threads(t_sim *sim)
 		return (KO);
 	while (i < sim->args->number_of_coders)
 	{
-		if (pthread_create(&sim->coders[i].coding,
+		if (pthread_create(&sim->coders[i].coding_t,
 				NULL, coder_routine, &sim->coders[i]) != OK)
 			break ;
 		i++;
@@ -65,7 +65,7 @@ static int	join_threads(t_sim *sim, int i)
 	while (i > 0)
 	{
 		i--;
-		pthread_join(sim->coders[i].coding, NULL);
+		pthread_join(sim->coders[i].coding_t, NULL);
 	}
 	pthread_join(sim->monitoring, NULL);
 	return (ret);
@@ -84,6 +84,6 @@ int	run_codexion(t_sim *sim)
 	result = join_threads(sim, index);
 	free_mutex_and_arrays(sim, sim->args->number_of_coders, 1);
 	pthread_mutex_destroy(&sim->burn_mutex);
-	pthread_mutex_destroy(&sim->log_mutex);
+	pthread_mutex_destroy(&sim->log_mtx);
 	return (result);
 }

@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 22:19:48 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/17 21:15:21 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/18 01:25:11 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,17 @@ static void	burn_msg(t_coder *c)
 {
 	long	t;
 	int		id;
+	char	*msg;
 
 	id = c->id;
+	msg = c->args->msg.burn;
 	t = get_time() - c->start;
-	pthread_mutex_lock(&c->sim->log_mutex);
-	printf("%ld ms -> coder %d %s\n", t, id, c->args->msg.burn);
-	pthread_mutex_unlock(&c->sim->log_mutex);
+	pthread_mutex_lock(&c->sim->log_mtx);
+	if (c->sim->args->visual)
+		printf("%s%s  %*ld -> %*d %s%s\n", RED, BRN, 7, t, 3, id, msg, RESET);
+	else
+		printf("%*ld %*d %s\n", 5, t, 3, id, msg);
+	pthread_mutex_unlock(&c->sim->log_mtx);
 }
 
 /// @brief Checks if a coder has reached burnout time.
@@ -32,16 +37,16 @@ static void	burn_msg(t_coder *c)
 /// @return TRUE if the coder has burned out, FALSE otherwise.
 static int	has_burned_out(t_sim *sim, int i)
 {
-	pthread_mutex_lock(&sim->coders[i].c_mutex);
-	if (get_time() - sim->coders[i].burning >= sim->args->time_to_burnout)
+	pthread_mutex_lock(&sim->coders[i].c_mtx);
+	if (get_time() - sim->coders[i].last_comp >= sim->args->time_to_burnout)
 	{
 		pthread_mutex_lock(&sim->burn_mutex);
 		sim->burnout = 1;
 		pthread_mutex_unlock(&sim->burn_mutex);
-		pthread_mutex_unlock(&sim->coders[i].c_mutex);
+		pthread_mutex_unlock(&sim->coders[i].c_mtx);
 		return (TRUE);
 	}
-	pthread_mutex_unlock(&sim->coders[i].c_mutex);
+	pthread_mutex_unlock(&sim->coders[i].c_mtx);
 	return (FALSE);
 }
 
@@ -53,10 +58,10 @@ static int	has_finished(t_coder *c)
 	int	result;
 
 	result = FALSE;
-	pthread_mutex_lock(&c->c_mutex);
+	pthread_mutex_lock(&c->c_mtx);
 	if (c->n_comp >= c->args->number_of_compiles_required)
 		result = TRUE;
-	pthread_mutex_unlock(&c->c_mutex);
+	pthread_mutex_unlock(&c->c_mtx);
 	return (result);
 }
 

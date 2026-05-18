@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:32:57 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/16 18:25:49 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/18 01:25:25 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,7 @@
 static int	is_valid_flag(char *flag)
 {
 	if (strcmp(flag, "--visual") != 0)
-	{
-		printf("%s[ERROR]:%s unrecognised argument '%s'. ", RED, RESET, flag);
-		printf("Did you mean '--visual'?\n");
 		return (FALSE);
-	}
 	return (TRUE);
 }
 

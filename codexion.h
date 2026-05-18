@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:28:33 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/16 13:12:10 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/18 01:34:34 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,16 @@
 # define RED "\033[0;31m"
 # define GREEN "\033[0;32m"
 # define YELLOW "\033[0;33m"
-# define BLU "\033[0;34m"
+# define BLUE "\033[0;34m"
 # define MAGENTA "\033[0;35m"
 # define CYAN "\033[0;36m"
 # define RESET "\033[0m"
+
+# define DNG "q[o_-]b"
+# define CMP "p[○┬●]q"
+# define DBG "q[0m0]p"
+# define RFC "q[¤Q¤]p"
+# define BRN "b[✖:✖]d"
 
 typedef struct s_msg	t_msg;
 typedef struct s_args	t_args;
@@ -82,8 +88,8 @@ struct s_dongle
 	long			release_time;
 	t_args			*args;
 	t_queue			queue[2];
-	pthread_mutex_t	dongle_mutex;
-	pthread_cond_t	dongle_cond;
+	pthread_mutex_t	d_mtx;
+	pthread_cond_t	d_cnd;
 };
 
 struct s_coder
@@ -91,15 +97,15 @@ struct s_coder
 	int				id;
 	int				n_comp;
 	long			start;
-	long			burning;
+	long			last_comp;
 	long			request_time;
 	t_args			*args;
 	t_sim			*sim;
 	t_dongle		*d_min;
 	t_dongle		*d_max;
-	pthread_t		coding;
-	pthread_mutex_t	c_mutex;
-	pthread_mutex_t	*log_mutex;
+	pthread_t		coding_t;
+	pthread_mutex_t	c_mtx;
+	pthread_mutex_t	*log_mtx;
 };
 
 struct s_sim
@@ -111,7 +117,7 @@ struct s_sim
 	t_coder			*coders;
 	pthread_t		monitoring;
 	pthread_mutex_t	burn_mutex;
-	pthread_mutex_t	log_mutex;
+	pthread_mutex_t	log_mtx;
 };
 
 /// --- INIT & RUN -----------------------------------------------------------
@@ -125,9 +131,9 @@ void	*coder_routine(void *c);
 int		check_burnout(t_coder *coder);
 int		is_first(t_dongle *d, t_coder *c);
 void	update_queue_values(t_dongle *d, t_coder *c, int reset);
-int		free_mutex_and_arrays(t_sim *sim, int i, int c_mutex_flag);
-char	*get_color(t_coder *c, char *msg, char *color);
+int		free_mutex_and_arrays(t_sim *sim, int i, int c_mtx_flag);
+char	*get_color(t_coder *c, char *msg);
+char	*get_face(t_coder *c, char *msg);
 long	get_time(void);
-int		error(void);
 
 #endif

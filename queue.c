@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/15 02:08:29 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/15 03:25:05 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/17 22:22:58 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,5 +62,5 @@ void	update_queue_values(t_dongle *d, t_coder *c, int reset)
 		return ;
 	}
 	d->queue[index].request_time = get_time();
-	d->queue[index].burnout_time = c->burning;
+	d->queue[index].burnout_time = c->last_comp;
 }

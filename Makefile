@@ -1,20 +1,20 @@
 NAME	= codexion
 
 
-NB_CODERS	= 5
-BURNOUT		= 1200
+NB_CODERS	= 300
+BURNOUT		= 120000
 COMPILE		= 200
 DEBUG		= 200
 REFACTOR	= 200
-NB_COMPILES	= 5
+NB_COMPILES	= 3
 COOLDOWN	= 100
 SCHEDULER	= fifo
 VISUAL		= --visual
 
 ST	= $(NB_CODERS) $(BURNOUT) $(COMPILE) $(DEBUG) $(REFACTOR) $(NB_COMPILES) $(COOLDOWN) $(SCHEDULER)
 CR	= $(NB_CODERS) $(BURNOUT) $(COMPILE) $(DEBUG) $(REFACTOR) $(NB_COMPILES) $(COOLDOWN) $(SCHEDULER)
-LT	= 3 2000 200 200 200 3 150 fifo
-FT	= 42 7492 420 372 291 4 226 fifo --visual
+LT	=  3 2000 200 200 200 3 150 fifo
+FT	= 42 9492 420 372 291 4 226 edf --visual
 
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror -pthread
@@ -52,32 +52,33 @@ OBJS	= $(SRCS:.c=.o)
 # --- codexion make commands -------------------------------------------------
 this:
 	clear
-	@echo ""
-	@echo "    master the Makefile before the Makefile masters you"
-	@echo ""
-	@echo "    ╔                                                 ╗" 
-	@echo "    ║  st :  $(ST)            ║"
-	@echo "    ║  lt :  $(LT)            ║"
-	@echo "    ║  ft : $(FT)   ║"
-	@echo "    ╚                                                 ╝"
-	@echo ""
-	@echo "      make            this"
-	@echo "  ═════════════════════════════════════════════════════════════════════"
-	@echo "      codexion        compile *.c -Wall -Werror -Wextra -pthread"
-	@echo "      all             compile *.c preserving objects"
-	@echo "      clean           remove binary"
-	@echo "      fclean          remove binary and objects"
-	@echo "      re              clean + codexion"
-	@echo "  ═════════════════════════════════════════════════════════════════════"
-	@echo "      run             execute codexion    [./$(NAME) st]"
-	@echo "      run--visual     execute colorexion  [./$(NAME) st --visual]"
-	@echo "      frun            re + flint + run--visual + clean"
-	@echo "  ═════════════════════════════════════════════════════════════════════"
-	@echo "      lint            norminette"
-	@echo "      val             valgrind --leak-check=full  [./$(NAME) lt]"
-	@echo "      hel             valgrind --tool=helgrind    [./$(NAME) lt]"
-	@echo "      flint           lint + val + hel"
-	@echo ""
+	@printf "\n"
+	@printf "    master the Makefile before the Makefile masters you\n"
+	@printf "\n"
+	@printf "    ╔                                                 ╗\n"
+	@printf "    ║  st :  $(ST)            ║\n"
+	@printf "    ║  lt :  $(LT)            ║\n"
+	@printf "    ║  ft : $(FT)   ║\n"
+	@printf "    ╚                                                 ╝\n"
+	@printf "\n"
+	@printf "      make            this\n"
+	@printf "  ═════════════════════════════════════════════════════════════════════\n"
+	@printf "      codexion        compile *.c -Wall -Werror -Wextra -pthread\n"
+	@printf "      all             compile *.c preserving objects\n"
+	@printf "      clean           remove binary\n"
+	@printf "      fclean          remove binary and objects\n"
+	@printf "      re              clean + codexion\n"
+	@printf "  ═════════════════════════════════════════════════════════════════════\n"
+	@printf "      run             execute codexion                   [st]\n"
+	@printf "      run--visual     execute colorexion                 [st --visual]\n"
+	@printf "      ft_run          run--visual + clean                [ft]\n"
+	@printf "      frun            re + flint + run--visual + clean   [st]\n"
+	@printf "  ═════════════════════════════════════════════════════════════════════\n"
+	@printf "      lint            norminette\n"
+	@printf "      val             valgrind --leak-check=full         [lt]\n"
+	@printf "      hel             valgrind --tool=helgrind           [lt]\n"
+	@printf "      flint           lint + val + hel                   [lt]\n"
+	@printf "\n"
 
 
 # --- compilation and cleanup --------------------------------------------------
@@ -104,22 +105,28 @@ re: clean $(NAME)
 
 # --- execution ----------------------------------------------------------------
 run: $(NAME)
-	@$(NEWLINE); echo "$(WHITE)entering the codexion...$(RESET)"; sleep 1
+	@$(NEWLINE); echo "$(WHITE)entering the codexion...$(RESET)"; $(NEWLINE);
 	@./$(NAME) $(ST) $(TRUEFALSE); $(NEWLINE)
 
 run--visual: $(NAME)
-	clear; echo "$(BLUE)entering the colorexion...$(RESET)"; sleep 1
-	@./$(NAME) $(CR) $(VISUAL) $(TRUEFALSE); $(NEWLINE)
+	clear; echo "$(WHITE)entering the \
+	$(GREEN)c$(YELLOW)o$(MAGENTA)l$(CYAN)o$(YELLOW)r$(RED)e$(GREEN)x$(MAGENTA)i$(CYAN)o$(RED)n$(WHITE)...$(RESET)"; \
+	$(NEWLINE); sleep 1; ./$(NAME) $(CR) $(VISUAL) $(TRUEFALSE); $(NEWLINE)
+
+ft_run:
+	@clear; $(NEWLINE); echo "$(MAGENTA)entering the school...$(RESET)"; sleep 1
+	@echo "$(RED)the rush begins!$(RESET)"; $(NEWLINE);
+	@./$(NAME) $(FT) $(TRUEFALSE); $(NEWLINE)
 
 frun: re flint
-	@$(NEWLINE); echo "$(BLUE)entering the codexion...$(RESET)"; sleep 2
-	@echo "$(MAGENTA)the codexion begins!$(RESET)"; sleep 1
-	@./$(NAME) $(FT) $(TRUEFALSE); $(NEWLINE)
+	@$(NEWLINE); echo "$(YELLOW)entering the codexion...$(RESET)"; sleep 1
+	@echo "$(CYAN)the codexion begins!$(RESET)"; $(NEWLINE);
+	@./$(NAME) $(ST) $(TRUEFALSE); $(NEWLINE)
 
 # --- lint & leaks -------------------------------------------------------------
 lint:
 	@$(NEWLINE); echo "$(YELLOW)norminetting...$(RESET)"
-	@$(NORM) $(TRUEFALSE); $(NEWLINE); sleep 1
+	@$(NORM) $(TRUEFALSE); $(NEWLINE);
 
 val: $(NAME)
 	@$(NEWLINE); echo "$(MAGENTA)valgrinding...$(RESET)"
@@ -134,4 +141,4 @@ hel: $(NAME)
 flint: lint val hel
 
 
-.PHONY: this all clean fclean re run run--visual frun lint val hel flint
+.PHONY: this all clean fclean re run run--visual ft_run frun lint val hel flint
