@@ -14,7 +14,7 @@ VISUAL		= --visual
 ST	= $(NB_CODERS) $(BURNOUT) $(COMPILE) $(DEBUG) $(REFACTOR) $(NB_COMPILES) $(COOLDOWN) $(SCHEDULER)
 CR	= $(NB_CODERS) $(BURNOUT) $(COMPILE) $(DEBUG) $(REFACTOR) $(NB_COMPILES) $(COOLDOWN) $(SCHEDULER)
 LT	=  3 2000 200 200 200 3 150 fifo
-FT	= 42 9492 420 372 291 4 226 edf --visual
+FT	= 42 9492 320 272 191 11 126 edf --visual
 
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror -pthread
@@ -45,7 +45,8 @@ SRCS	= main.c \
 		  codexion.c \
 		  codexion_init.c \
 		  parser.c \
-		  utils.c
+		  utils.c \
+		  ft_run.c
 
 OBJS	= $(SRCS:.c=.o)
 
@@ -105,7 +106,7 @@ re: clean $(NAME)
 
 # --- execution ----------------------------------------------------------------
 run: $(NAME)
-	@$(NEWLINE); echo "$(WHITE)entering the codexion...$(RESET)";
+	@$(NEWLINE); echo "entering the codexion...";
 	@./$(NAME) $(ST) $(TRUEFALSE); $(NEWLINE)
 
 run--visual: $(NAME)
@@ -113,7 +114,7 @@ run--visual: $(NAME)
 	$(GREEN)c$(YELLOW)o$(MAGENTA)l$(CYAN)o$(YELLOW)r$(RED)e$(GREEN)x$(MAGENTA)i$(CYAN)o$(RED)n$(WHITE)...$(RESET)"; \
 	sleep 1; ./$(NAME) $(CR) $(VISUAL) $(TRUEFALSE); $(NEWLINE)
 
-ft_run:
+ft_run: re
 	@clear; $(NEWLINE); echo "$(MAGENTA)entering the school...$(RESET)"; sleep 1
 	@echo "$(RED)the rush begins!$(RESET)";
 	@./$(NAME) $(FT) $(TRUEFALSE); $(NEWLINE)

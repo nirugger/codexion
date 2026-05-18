@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 22:19:48 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/18 01:25:11 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/18 17:37:01 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void	burn_msg(t_coder *c)
 	t = get_time() - c->start;
 	pthread_mutex_lock(&c->sim->log_mtx);
 	if (c->sim->args->visual)
-		printf("%s%s  %*ld -> %*d %s%s\n", RED, BRN, 7, t, 3, id, msg, RESET);
+		log_visual(c, msg, t);
 	else
 		printf("%*ld %*d %s\n", 5, t, 3, id, msg);
 	pthread_mutex_unlock(&c->sim->log_mtx);

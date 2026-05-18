@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/15 02:24:15 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/18 02:57:11 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/18 14:30:53 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,8 @@ static int	init_coders(t_sim *sim)
 	i = 0;
 	while (i < sim->args->number_of_coders)
 	{
-		sim->coders[i].name = get_coder_name(sim, i);
+		if (sim->args->number_of_coders <= sim->names.nb_names)
+			sim->coders[i].name = sim->names.ft_list[i];
 		sim->coders[i].id = i + 1;
 		sim->coders[i].log_mtx = &sim->log_mtx;
 		sim->coders[i].n_comp = 0;
@@ -118,7 +119,9 @@ static void	assign_dongles(t_sim *sim)
 int	init_codexion(t_args *args, t_sim *sim)
 {
 	sim->args = args;
-	sim->names = init_names(sim);
+	sim->names.ft_list = get_names();
+	sim->names.nb_names = count_names(sim->names.ft_list);
+	shuffle_names(sim->names.ft_list);
 	if (init_arrays(sim) != OK)
 		return (KO);
 	sim->burnout = FALSE;

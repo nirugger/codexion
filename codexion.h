@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:28:33 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/18 02:58:56 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/18 18:04:37 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <unistd.h>
 # include <sys/time.h>
 # include <pthread.h>
+# include "ft_run.h"
 
 /*
  * Core structures of the Codexion simulator.
@@ -31,26 +32,13 @@
 # define OK 0
 # define KO 1
 
-# define RED "\033[0;31m"
-# define GREEN "\033[0;32m"
-# define YELLOW "\033[0;33m"
-# define BLUE "\033[0;34m"
-# define MAGENTA "\033[0;35m"
-# define CYAN "\033[0;36m"
-# define RESET "\033[0m"
-
-# define DNG "q[o_-]b"
-# define CMP "p[○┬●]q"
-# define DBG "q[0m0]p"
-# define RFC "q[¤Q¤]p"
-# define BRN "b[✖:✖]d"
-
 typedef struct s_msg	t_msg;
 typedef struct s_args	t_args;
 typedef struct s_queue	t_queue;
 typedef struct s_coder	t_coder;
 typedef struct s_dongle	t_dongle;
 typedef struct s_sim	t_sim;
+typedef struct s_names	t_names;
 
 struct s_msg
 {
@@ -109,11 +97,17 @@ struct s_coder
 	pthread_mutex_t	*log_mtx;
 };
 
+struct s_names
+{
+	char	**ft_list;
+	int		nb_names;
+};
+
 struct s_sim
 {
 	int				burnout;
 	long			start;
-	char			**names;
+	t_names			names;
 	t_args			*args;
 	t_dongle		*dongles;
 	t_coder			*coders;
@@ -134,8 +128,14 @@ int		check_burnout(t_coder *coder);
 int		is_first(t_dongle *d, t_coder *c);
 void	update_queue_values(t_dongle *d, t_coder *c, int reset);
 int		free_mutex_and_arrays(t_sim *sim, int i, int c_mtx_flag);
+long	get_time(void);
+
+/// --- VISUAL & PEERS -------------------------------------------------------
+int		count_names(char **names);
+void	shuffle_names(char **names);
+void	log_visual(t_coder *c, char *s, long t);
 char	*get_color(t_coder *c, char *msg);
 char	*get_face(t_coder *c, char *msg);
-long	get_time(void);
+char	**get_names(void);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/14 00:32:10 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/18 01:24:33 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/18 14:13:25 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,8 @@ static int	log_msg(pthread_mutex_t *log_mtx, t_coder *c, char *msg)
 {
 	int		id;
 	long	t;
-	char	*rgb;
-	char	*face;
 
 	id = c->id;
-	rgb = get_color(c, msg);
-	face = get_face(c, msg);
 	t = get_time() - c->start;
 	pthread_mutex_lock(log_mtx);
 	if (check_burnout(c))
@@ -35,7 +31,7 @@ static int	log_msg(pthread_mutex_t *log_mtx, t_coder *c, char *msg)
 		return (KO);
 	}
 	if (c->args->visual)
-		printf("%s%s  %*ld -> %*d %s%s\n", rgb, face, 7, t, 3, id, msg, RESET);
+		log_visual(c, msg, t);
 	else
 		printf("%*ld %*d %s\n", 5, t, 3, id, msg);
 	pthread_mutex_unlock(log_mtx);
@@ -61,6 +57,7 @@ static void	take_dongle(t_dongle *d, t_coder *c)
 			pthread_mutex_unlock(&d->d_mtx);
 			return ;
 		}
+		// provare con dongle_cooldonw / 2
 		wake_ms = d->release_time + d->args->dongle_cooldown;
 		ts.tv_sec = wake_ms / 1000;
 		ts.tv_nsec = (wake_ms % 1000) * 1000000L;
