@@ -1,12 +1,12 @@
 NAME	= codexion
 
 
-NB_CODERS	= 300
-BURNOUT		= 120000
+NB_CODERS	= 5
+BURNOUT		= 1200
 COMPILE		= 200
 DEBUG		= 200
 REFACTOR	= 200
-NB_COMPILES	= 3
+NB_COMPILES	= 5
 COOLDOWN	= 100
 SCHEDULER	= fifo
 VISUAL		= --visual
@@ -105,22 +105,22 @@ re: clean $(NAME)
 
 # --- execution ----------------------------------------------------------------
 run: $(NAME)
-	@$(NEWLINE); echo "$(WHITE)entering the codexion...$(RESET)"; $(NEWLINE);
+	@$(NEWLINE); echo "$(WHITE)entering the codexion...$(RESET)";
 	@./$(NAME) $(ST) $(TRUEFALSE); $(NEWLINE)
 
 run--visual: $(NAME)
-	clear; echo "$(WHITE)entering the \
+	@clear; $(NEWLINE); echo "$(WHITE)entering the \
 	$(GREEN)c$(YELLOW)o$(MAGENTA)l$(CYAN)o$(YELLOW)r$(RED)e$(GREEN)x$(MAGENTA)i$(CYAN)o$(RED)n$(WHITE)...$(RESET)"; \
-	$(NEWLINE); sleep 1; ./$(NAME) $(CR) $(VISUAL) $(TRUEFALSE); $(NEWLINE)
+	sleep 1; ./$(NAME) $(CR) $(VISUAL) $(TRUEFALSE); $(NEWLINE)
 
 ft_run:
 	@clear; $(NEWLINE); echo "$(MAGENTA)entering the school...$(RESET)"; sleep 1
-	@echo "$(RED)the rush begins!$(RESET)"; $(NEWLINE);
+	@echo "$(RED)the rush begins!$(RESET)";
 	@./$(NAME) $(FT) $(TRUEFALSE); $(NEWLINE)
 
 frun: re flint
 	@$(NEWLINE); echo "$(YELLOW)entering the codexion...$(RESET)"; sleep 1
-	@echo "$(CYAN)the codexion begins!$(RESET)"; $(NEWLINE);
+	@echo "$(CYAN)the codexion begins!$(RESET)";
 	@./$(NAME) $(ST) $(TRUEFALSE); $(NEWLINE)
 
 # --- lint & leaks -------------------------------------------------------------

@@ -6,7 +6,7 @@
 /*   By: nirugger <nirugger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/11 10:25:00 by nirugger          #+#    #+#             */
-/*   Updated: 2026/05/18 01:40:18 by nirugger         ###   ########.fr       */
+/*   Updated: 2026/05/18 02:24:09 by nirugger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 
 /// @brief Prints a generic error message.
 /// @return KO.
-static int	error(char *type, char *flag)
+static int	error(char *type, char **argv)
 {
 	if (strcmp(type, "base") == 0)
 		printf("[ERROR]\n");
 	else if (strcmp(type, "flag") == 0)
 	{
 		printf("%s[ERROR]:%s unrecognised argument ", RED, RESET);
-		printf("'%s'. ", flag);
+		printf("'%s'. ", argv[9]);
 		printf("Did you mean '--visual'?\n");
 	}
 	return (KO);
@@ -36,14 +36,15 @@ int	main(int argc, char **argv)
 	t_args			args;
 	t_sim			sim;
 
+	write(1, "\n", 1);
 	if (validate_args(argc, argv, &args) != OK && argc == 10)
-		return (error("flag", argv[9]));
+		return (error("flag", argv));
 	if (validate_args(argc, argv, &args) != OK && argc != 10)
-		return (error("base", argv[9]));
+		return (error("base", argv));
 	if (init_codexion(&args, &sim) != OK)
-		return (error("base", argv[9]));
+		return (error("base", argv));
 	if (run_codexion(&sim) != OK)
-		return (error("base", argv[9]));
+		return (error("base", argv));
 	write(1, "\n", 1);
 	if (sim.burnout == TRUE)
 		return (KO);
